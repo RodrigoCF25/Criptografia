@@ -2,10 +2,10 @@
 def IsSquare(matrix):
     rows = len(matrix)
 
-    row_not_squared = list(filter(lambda row: row if len(row) != rows else None,matrix))
-
-    if len(row_not_squared) > 0:
-        return False
+    for row in matrix:
+        columns = len(row)
+        if columns != rows:
+            return  False
     
     return True
 
@@ -64,7 +64,7 @@ def Ceil(number):
 def sortMatrix(m,row_with_which_we_will_pivot):
     '''
     m: the matrix
-    row_pivot: the row to pivot
+    row_pivot: the row which we will pivot with
     '''
 
     matrix = [row for row in m]
@@ -254,10 +254,10 @@ def CofactorMatrix(m):
 
     for row in range(rows):
         cofactor_row = []
-        matrix_without_the_elements_whose_cofactors_we_will_calculate = [m[i] for i in range(rows) if i != row]
+        matrix_without_the_elements_of_the_row_whose_cofactors_we_will_calculate = [m[i] for i in range(rows) if i != row]
 
         for column in range(columns):
-            sub_matrix_for_cofactor = [sub_matrix_row[:column] + sub_matrix_row[column+1:] for sub_matrix_row in matrix_without_the_elements_whose_cofactors_we_will_calculate]
+            sub_matrix_for_cofactor = [sub_matrix_row[:column] + sub_matrix_row[column+1:] for sub_matrix_row in matrix_without_the_elements_of_the_row_whose_cofactors_we_will_calculate]
             determinant = Determinant(sub_matrix_for_cofactor)
             cofactor = determinant * (-1)**(row+column)
             cofactor_row.append(cofactor)
