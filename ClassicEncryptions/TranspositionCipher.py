@@ -2,7 +2,7 @@
 from random import shuffle as random_shuffle
 from functools import reduce
 from time import time
-from myText import NormalizeText, GetUniqueValues
+from TextLib import NormalizeText, GetUniqueValues
 
 
 def CreateKey(length): #Get a key

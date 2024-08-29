@@ -1,4 +1,4 @@
-from myText import ALPHABET, ALPHABET_LENGTH, NormalizeText, NormalizeKey
+from TextLib import ALPHABET, ALPHABET_LENGTH, NormalizeText, NormalizeKey
 from time import time
 
 class PolyAlphabeticCipher:

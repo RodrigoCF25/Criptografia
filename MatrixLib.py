@@ -82,7 +82,6 @@ def sortMatrix(m,row_with_which_we_will_pivot):
             matrix_sorted.append(row)
             matrix.remove(row)
             break
-    
     else:
         return m
 
@@ -268,11 +267,61 @@ def CofactorMatrix(m):
 
 
 
-
 def Adjoint(m):
     if not IsSquare(m):
         raise ValueError("Matrix must be square")
     return Transpose(CofactorMatrix(m))
+
+
+
+
+def GaussJordan(m,constant_terms):
+
+    if not IsSquare(m):
+        raise ValueError("Matrix must be square")
+
+    if len(constant_terms) != len(m):
+        raise ValueError("The length of the constant terms must be the same as the length of the matrix")
+
+    matrix = [row + [constant_terms[i]] for i,row in enumerate(m)]
+
+    rows,columns = GetMatrixShape(matrix)
+
+    matrix = sortMatrix(matrix,0)
+
+    for row in range(rows-1):
+        diagonal_element = matrix[row][row]
+
+        if diagonal_element == 0:
+            return None
+        
+        matrix[row] = list(map(lambda x: x/diagonal_element,matrix[row]))
+
+        for next_row in range(row+1,rows):
+            multiplier = matrix[next_row][row] * -1
+
+            matrix[next_row] = list(map(lambda x,y: x*multiplier + y,matrix[row],matrix[next_row]))
+
+        matrix = sortMatrix(matrix,row+1)
+
+
+    for row in range(rows-1,-1,-1):
+        diagonal_element = matrix[row][row]
+
+        if diagonal_element == 0:
+            return None
+
+        matrix[row] = list(map(lambda x: x/diagonal_element,matrix[row]))
+
+        for previous_row in range(row-1,-1,-1):
+            multiplier = matrix[previous_row][row] * -1
+
+            matrix[previous_row] = list(map(lambda x,y: x*multiplier + y,matrix[row],matrix[previous_row]))
+
+    solutions = [row[-1] for row in matrix]
+
+    return solutions
+
 
 
 
@@ -303,3 +352,7 @@ if __name__ == "__main__":
 
     print(Adjoint(matrix))
 
+
+    constants = [1,2,3,4]
+    print(GaussJordan(matrix,constants))
+    

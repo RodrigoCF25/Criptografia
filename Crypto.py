@@ -1,12 +1,12 @@
 from random import shuffle as random_shuffle
 from time import time
-from myText import NormalizeText
-from CaesarCipher import CaesarCipher
-from TranspositionCipher import TranspositionCipher
-from PolyAlphabeticCipher import PolyAlphabeticCipher
-from SubstitutionCipher import SubstitutionCipher
-from PlayfairCipher import PlayfairCipher
-from HillCipher import HillCipher
+from TextLib import NormalizeText
+from ClassicEncryptions.CaesarCipher import CaesarCipher
+from ClassicEncryptions.TranspositionCipher import TranspositionCipher
+from ClassicEncryptions.PolyAlphabeticCipher import PolyAlphabeticCipher
+from ClassicEncryptions.SubstitutionCipher import SubstitutionCipher
+from ClassicEncryptions.PlayfairCipher import PlayfairCipher
+from ClassicEncryptions.HillCipher import HillCipher
 
 
 class Encryptor:
@@ -15,7 +15,6 @@ class Encryptor:
 
     
     def CaesarCipher(self,text,shift):
-        
         encoder = CaesarCipher()
         cipher_text = encoder.Encrypt(text,shift)
         return cipher_text
@@ -92,6 +91,7 @@ if __name__ == "__main__":
     text = "Springtrap is the best animatronic"
     
     normalized_plain_text = NormalizeText(text)
+    
     print("Encrypting and decrypting using the Caesar Cipher")
     t1 = time()
     cipher_text = encoder.CaesarCipher(normalized_plain_text,3)

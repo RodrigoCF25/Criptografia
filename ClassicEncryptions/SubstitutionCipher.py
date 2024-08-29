@@ -1,4 +1,4 @@
-from myText import ALPHABET, ALPHABET_LENGTH, NormalizeText, NormalizeKey, GetUniqueValues
+from TextLib import ALPHABET, ALPHABET_LENGTH, NormalizeText, NormalizeKey, GetUniqueValues
 from functools import reduce
 from time import time
 from random import choice

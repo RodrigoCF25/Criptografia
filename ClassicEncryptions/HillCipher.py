@@ -1,8 +1,9 @@
-from myText import NormalizeText, ALPHABET, ALPHABET_LENGTH
+from TextLib import NormalizeText, ALPHABET, ALPHABET_LENGTH
 from MatrixLib import Multiply as MatrixMultiply
 from MatrixLib import GetMatrixShape, Adjoint, Determinant, Floor, Ceil
 from MatrixLib import IsSquare as IsSquareMatrix
 from time import time
+
 
 class HillCipher:
     def __init__(self):

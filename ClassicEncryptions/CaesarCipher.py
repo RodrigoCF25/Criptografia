@@ -1,5 +1,6 @@
-from myText import ALPHABET, ALPHABET_LENGTH, NormalizeText
+from TextLib import ALPHABET, ALPHABET_LENGTH, NormalizeText
 from time import time
+
 class CaesarCipher:
     def __init__(self):
         pass
@@ -9,7 +10,7 @@ class CaesarCipher:
         normalized_plain_text: string (must be normalized)
         """
 
-        normalized_plain_text = normalized_plain_text.lower()
+        normalized_plain_text = NormalizeText(normalized_plain_text)
         cipher_text = list()
 
         for letter in normalized_plain_text:

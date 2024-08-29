@@ -1,4 +1,4 @@
-from myText import NormalizeText, ALPHABET, ALPHABET_LENGTH
+from TextLib import NormalizeText, ALPHABET, ALPHABET_LENGTH
 from time import time
 from functools import reduce
 
