@@ -323,10 +323,34 @@ def GaussJordan(m,constant_terms):
     return solutions
 
 
+"""
+MUY LENTO
+def RecursiveDeterminant(m):
+    if not IsSquare(m):
+        raise ValueError("Matrix must be square")
+    
+    rows,columns = GetMatrixShape(m)
 
+    if rows == columns and rows == 2:
+        return m[0][0]*m[1][1] - m[0][1]*m[1][0]
+    
+    determinant = 0
+
+
+    for i in range(columns):
+        sub_matrix = m[1:]
+       
+        for j in range(rows-1):
+            sub_matrix[j] = sub_matrix[j][:i] + sub_matrix[j][i+1:]
+
+        determinant += m[0][i] * RecursiveDeterminant(sub_matrix) * (-1)**i
+
+    return determinant
+"""
 
 if __name__ == "__main__":
     
+
     matrix = [
         [17,17,5],
         [21,18,21],
@@ -336,13 +360,14 @@ if __name__ == "__main__":
     print(Gauss(matrix))
     print(Determinant(matrix))
 
-    
+    """
     matrix = [
         [2,3,1,5],
         [6,7,2,4],
         [1,8,9,3],
         [4,1,2,7]
     ]
+    """
 
     print(Determinant(matrix))
 
@@ -353,6 +378,6 @@ if __name__ == "__main__":
     print(Adjoint(matrix))
 
 
-    constants = [1,2,3,4]
+    constants = [1,2,3]
     print(GaussJordan(matrix,constants))
     
