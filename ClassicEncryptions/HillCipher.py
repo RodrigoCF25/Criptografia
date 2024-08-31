@@ -1,6 +1,6 @@
 from TextLib import NormalizeText, ALPHABET, ALPHABET_LENGTH
 from MatrixLib import Multiply as MatrixMultiply
-from MatrixLib import GetMatrixShape, Adjoint, Determinant, Floor, Ceil
+from MatrixLib import GetMatrixShape, Adjoint, Determinant
 from MatrixLib import IsSquare as IsSquareMatrix
 from time import time
 
@@ -88,6 +88,7 @@ class HillCipher:
 
         for i in range(ALPHABET_LENGTH):
             if (number * i) % ALPHABET_LENGTH == 1:
+                #print(f"Modular inverse of {number} is {i}")
                 return i
         
         return None
@@ -101,14 +102,16 @@ class HillCipher:
 
         adjoint = Adjoint(key)
 
+        #print(f"Adjoint: {adjoint}")
+
         rows,columns = GetMatrixShape(key)
 
         for row in range(rows):
             for column in range(columns):
-                if adjoint[row][column] < 0: #If the number is negative, we need to make it positive module 26
                     adjoint[row][column] = adjoint[row][column] % ALPHABET_LENGTH
         
         
+        #print(f"Adjoint mod 26: {adjoint}")
 
         determinant = Determinant(key)
 
@@ -137,7 +140,7 @@ class HillCipher:
         return p
 
 
-    def Decrypt(self,cipher_text,key):
+    def Decrypt(self,cipher_text,key,return_inverse_key=False):
         """
         cipher_text: string
         key: list of lists integers [[1,2],[3,4]]
@@ -156,7 +159,12 @@ class HillCipher:
         for n,row in enumerate(p):
             text_plain[n] = "".join(list(map(lambda number: ALPHABET[number],row)))
 
-        return "".join(text_plain)
+        text_plain = "".join(text_plain)
+
+        if return_inverse_key:
+            return text_plain,inverse_key
+        
+        return text_plain
 
 
 
@@ -203,3 +211,5 @@ if __name__ == "__main__":
     t2 = time()
     print(f"Decrypted text: {text_plain}")
     print(f"Time: {t2-t1} seconds")
+
+    
