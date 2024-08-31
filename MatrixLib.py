@@ -55,10 +55,6 @@ def Ceil(number):
 
 
 
-    
-
-
-
 
 
 def sortMatrix(m,row_with_which_we_will_pivot):
@@ -323,6 +319,65 @@ def GaussJordan(m,constant_terms):
     return solutions
 
 
+#Method by Adjoint and Determinant
+"""
+def InverseMatrix(m):
+    if not IsSquare(m):
+        raise ValueError("Matrix must be square")
+
+    determinant = Determinant(m)
+
+    if determinant == 0:
+        raise ValueError("Matrix is not invertible")
+
+    adjoint = Adjoint(m)
+
+    inverse = [[adjoint[i][j]/determinant for j in range(len(adjoint))] for i in range(len(adjoint))]
+
+    return inverse
+
+"""
+
+
+#Method by GaussJordan
+
+def InverseMatrix(m):
+    if not IsSquare(m):
+        raise ValueError("Matrix must be square")
+    
+    rows,columns = GetMatrixShape(m)
+    
+    matrix = [row for row in m]
+
+    matrix = sortMatrix(matrix,0)
+
+    identity = [[1 if row == column else 0 for row in range(rows)] for column in range(columns)]
+
+    inverse = [matrix[i] + identity[i] for i in range(rows)]
+
+    inverse = Gauss(inverse)
+
+    if inverse == None:
+        return None
+
+    for row in range(rows-1,0,-1):
+        diagonal_element = inverse[row][row]
+
+        if diagonal_element == 0:
+            return None
+
+        inverse[row] = list(map(lambda x: x/diagonal_element,inverse[row]))
+
+        for previous_row in range(row-1,-1,-1):
+            multiplier = inverse[previous_row][row] * -1
+
+            inverse[previous_row] = list(map(lambda x,y: x*multiplier + y,inverse[row],inverse[previous_row]))
+
+    inverse = [row[columns:] for row in inverse]
+    
+    return inverse
+
+
 """
 MUY LENTO
 def RecursiveDeterminant(m):
@@ -381,3 +436,5 @@ if __name__ == "__main__":
     constants = [1,2,3]
     print(GaussJordan(matrix,constants))
     
+
+    print(InverseMatrix(matrix))
