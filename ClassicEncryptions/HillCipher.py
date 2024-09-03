@@ -75,7 +75,7 @@ class HillCipher:
         encrypted_text = ["" for _ in range(len(c))]
         
         for n,row in enumerate(c):
-            encrypted_text[n] = "".join(list(map(lambda number: ALPHABET[number],row)))
+            encrypted_text[n] = "".join(map(lambda number: ALPHABET[number],row))
         
         return "".join(encrypted_text)
     
@@ -157,7 +157,7 @@ class HillCipher:
         text_plain = ["" for _ in range(len(p))]
 
         for n,row in enumerate(p):
-            text_plain[n] = "".join(list(map(lambda number: ALPHABET[number],row)))
+            text_plain[n] = "".join(map(lambda number: ALPHABET[number],row))
 
         text_plain = "".join(text_plain)
 
@@ -183,7 +183,7 @@ class HillCipher:
         text_plain = ["" for _ in range(len(p))]
 
         for n,row in enumerate(p):
-            text_plain[n] = "".join(list(map(lambda number: ALPHABET[number],row)))
+            text_plain[n] = "".join(map(lambda number: ALPHABET[number],row))
 
         return "".join(text_plain)
 

@@ -12,7 +12,7 @@ def __AND(a,b):
     return "0"
 
 def AND(a,b):
-    result = list(map(__AND,a,b))
+    result = map(__AND,a,b)
     return "".join(result)
 
 def __OR(a,b):
@@ -21,7 +21,7 @@ def __OR(a,b):
     return "0"
 
 def OR(a,b):
-    result = list(map(__OR,a,b))
+    result = map(__OR,a,b)
     return "".join(result)
 
 
@@ -32,14 +32,14 @@ def __NOT(a):
 
 
 def NOT(a):
-    result = list(map(__NOT,a))
+    result = map(__NOT,a)
     return "".join(result)
 
 def __NAND(a,b):
     return __NOT(__AND(a,b))
 
 def NAND(a,b):
-    result = list(map(__NAND,a,b))
+    result = map(__NAND,a,b)
     return "".join(result)
 
 
@@ -47,7 +47,7 @@ def __NOR(a,b):
     return __NOT(__OR(a,b))
 
 def NOR(a,b):
-    result = list(map(__NOR,a,b))
+    result = map(__NOR,a,b)
     return "".join(result)
 
 
@@ -58,7 +58,7 @@ def __XOR(a,b):
 
 
 def XOR(a,b):
-    result = list(map(__XOR,a,b))
+    result = map(__XOR,a,b)
     return "".join(result)
 
 

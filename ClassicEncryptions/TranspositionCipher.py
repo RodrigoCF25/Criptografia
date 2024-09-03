@@ -54,7 +54,7 @@ class TranspositionCipher:
         for start_index in range(0,normalizad_plain_text_length,key_length):
             end_index = start_index + key_length
             block_text = normalizad_plain_text[start_index:end_index]
-            cipher_text[start_index:end_index] = list(map(lambda index: block_text[index],key))
+            cipher_text[start_index:end_index] = map(lambda index: block_text[index],key)
 
         
         
@@ -96,7 +96,7 @@ class TranspositionCipher:
         for start_index in range(0,cipher_text_length,key_length):
             end_index = start_index + key_length
             block_text = cipher_text[start_index:end_index]
-            plain_text[start_index:end_index] = list(map(lambda index: block_text[key.index(index)],range(0,key_length)))
+            plain_text[start_index:end_index] = map(lambda index: block_text[key.index(index)],range(0,key_length))
 
         plain_text = "".join(plain_text) #Even is shown an error, is impossible to have a None value in plain_text because we checked before that the key and the text have the same length
 

@@ -19,7 +19,7 @@ class SubstitutionCipher:
         
         normalized_plain_text = normalized_plain_text.lower()
 
-        cipher_text = list(map(lambda letter: substitution_key[letter],normalized_plain_text))
+        cipher_text = map(lambda letter: substitution_key[letter],normalized_plain_text)
 
         
 
@@ -37,7 +37,7 @@ class SubstitutionCipher:
 
         inverted_key = {value:key for key,value in substitution_key.items()}
 
-        plain_text = list(map(lambda letter: inverted_key[letter],cipher_text))
+        plain_text = map(lambda letter: inverted_key[letter],cipher_text)
 
 
         return "".join(plain_text)

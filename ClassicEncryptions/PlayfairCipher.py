@@ -135,7 +135,7 @@ class PlayfairCipher:
         pairs = self.__SplitTextIntoPairs(normalized_plain_text)
 
         #We encrypt each pair
-        cipher_text = list(map(lambda pair: self.__EncryptPair(pair),pairs))
+        cipher_text = map(lambda pair: self.__EncryptPair(pair),pairs)
 
         return "".join(cipher_text)
     
@@ -198,7 +198,7 @@ class PlayfairCipher:
 
 
         #We decrypt each pair
-        plain_text = list(map(lambda pair: self.__DecryptPair(pair),pairs))
+        plain_text = map(lambda pair: self.__DecryptPair(pair),pairs)
 
         return "".join(plain_text)
     

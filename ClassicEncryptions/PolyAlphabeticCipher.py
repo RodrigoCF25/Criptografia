@@ -37,7 +37,7 @@ class PolyAlphabeticCipher:
         for start_index in range(0,text_length,key_length):
             end_index = start_index + key_length
             block_text = normalized_plain_text[start_index:end_index]
-            block_cipher_text = list(map(lambda letter,key_item: ALPHABET[(ALPHABET.index(letter) + key_item) % ALPHABET_LENGTH],block_text,key))
+            block_cipher_text = map(lambda letter,key_item: ALPHABET[(ALPHABET.index(letter) + key_item) % ALPHABET_LENGTH],block_text,key)
             cipher_text[start_index:end_index] = "".join(block_cipher_text)
 
         
@@ -79,7 +79,7 @@ class PolyAlphabeticCipher:
         for start_index in range(0,cipher_text_length,key_length):
             end_index = start_index + key_length
             block_text = cipher_text[start_index:end_index]
-            block_plain_text = list(map(lambda letter,key_item: ALPHABET[(ALPHABET.index(letter) - key_item) % ALPHABET_LENGTH],block_text,key))
+            block_plain_text = map(lambda letter,key_item: ALPHABET[(ALPHABET.index(letter) - key_item) % ALPHABET_LENGTH],block_text,key)
             plain_text[start_index:end_index] = "".join(block_plain_text)
 
         plain_text = "".join(plain_text)
