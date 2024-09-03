@@ -74,15 +74,6 @@ if __name__ == "__main__":
 
     print(binary_number)
 
-    print(ALPHABET_BINARY)
-
-    text = "hello"
-
-    binary_text = TextToBinary(text)
-
-    print(binary_text)
-    print(len(binary_text))
-
     a = 5
     b = 3
 
