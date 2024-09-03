@@ -1,40 +1,65 @@
 from TextLib import ALPHABET,ALPHABET_LENGTH
-
+from time import time
 
 #Get the binary representation of a number
 def IntToBinary(number):
     return bin(number)[2:]
 
 
-#Padding a binary number
-def PaddingByte(binary_number):
-    return "0" * (8 - len(binary_number)) + binary_number
+def __AND(a,b):
+    if a == "1" and b == "1":
+        return "1"
+    return "0"
+
+def AND(a,b):
+    result = list(map(__AND,a,b))
+    return "".join(result)
+
+def __OR(a,b):
+    if a == "1" or b == "1":
+        return "1"
+    return "0"
+
+def OR(a,b):
+    result = list(map(__OR,a,b))
+    return "".join(result)
 
 
-#Get the binary representation of a character
-def LetterToBinary(letter):
-    letter_index = ALPHABET.index(letter)
-    binary_number = IntToBinary(letter_index)
-    padded_byte = PaddingByte(binary_number)
-    return padded_byte
+
+def __NAND(a,b):
+    if __AND(a,b) == "1":
+        return "0"
+    return "1"
+
+def NAND(a,b):
+    result = list(map(__NAND,a,b))
+    return "".join(result)
 
 
-ALPHABET_BINARY = {letter:LetterToBinary(letter) for letter in ALPHABET}
+def __NOR(a,b):
+    if __OR(a,b) == "1":
+        return "0"
+    return "1"
 
-#Get the binary representation of a text
-def TextToBinary(text):
-    binary_text = []
-    for letter in text:
-        binary_text.append(ALPHABET_BINARY[letter])
+def NOR(a,b):
+    result = list(map(__NOR,a,b))
+    return "".join(result)
+
+
+def __XOR(a,b):
+    if a != b:
+        return "1"
+    return "0"
+
+
+def XOR(a,b):
+    result = list(map(__XOR,a,b))
+    return "".join(result)
+
+
+
+
     
-    binary_text = "".join(binary_text)
-
-    return binary_text
-
-
-
-
-
 
 
 
@@ -64,3 +89,11 @@ if __name__ == "__main__":
     res = a ^ b
 
     print(res)
+
+
+    a = "01101001 01101100 01110101 01110110 01111001 01100001"
+    b = "01111000 01101111 01111000 01101111 01111000 01101111"
+    t1 = time()
+    XOR(a,b)
+    t2 = time()
+    print(t2-t1,"seconds")
