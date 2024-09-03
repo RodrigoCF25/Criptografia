@@ -10,15 +10,10 @@ def NormalizeText(text):
         # Lowercase the text
         text = text.lower()
 
-        # Remove special characters
-        special_characters = r"[.,:;¡\!¿\?\*\+\-\/\(\)\[\]\{\}\s]+"
-        text = re_sub(special_characters, "", text)
+        pattern = r"[^a-zA-Z0-9\s]+|[\d\s]+"
 
-        #Change áéíóú to aeiou also ñ to n and ü to u
-        letters_to_change = {"á":"a","é":"e","í":"i","ó":"o","ú":"u","ñ":"n","ü":"u"}
-
-        for invalid_letter,valid_letter in letters_to_change.items():
-            text = re_sub(invalid_letter,valid_letter,text)
+        # Remove all non-alphabetic characters
+        text = re_sub(pattern,"",text)
 
         return text
 
@@ -48,16 +43,32 @@ def NormalizeKey(key):
         
         return key
 
-"""
-def GetKeyWithTheRightLength(key,text_length):
-        key_length = len(key)
-        if key_length < text_length:
-            quotient = text_length // key_length
-            remainder = text_length % key_length
-            key = (key * quotient) + key[:remainder]
-        
-        elif key_length > text_length:
-            key = key[:text_length]
-        
-        return key
-"""
+
+def PaddingText(text,length):
+    text = text + "x"*(length - len(text))
+    return text
+
+
+
+def LetterToBinary(letter):
+    letter_number = ord(letter)
+    binary_number = bin(letter_number)[2:]
+    binary_number = "0"*(8-len(binary_number)) + binary_number
+    return binary_number
+
+
+def TextToBinary(text):
+    binary_text = [LetterToBinary(letter) for letter in text]
+    return "".join(binary_text)
+
+
+def BinaryToLetter(binary):
+    letter_number = int(binary,2)
+    letter = chr(letter_number)
+    return letter
+
+def BinaryToText(binary_text):
+    text = list(map(BinaryToLetter,[binary_text[i:i+8] for i in range(0,len(binary_text),8)]))
+    return "".join(text)
+
+
