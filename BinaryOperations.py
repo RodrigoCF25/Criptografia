@@ -25,11 +25,18 @@ def OR(a,b):
     return "".join(result)
 
 
-
-def __NAND(a,b):
-    if __AND(a,b) == "1":
+def __NOT(a):
+    if a == "1":
         return "0"
     return "1"
+
+
+def NOT(a):
+    result = list(map(__NOT,a))
+    return "".join(result)
+
+def __NAND(a,b):
+    return __NOT(__AND(a,b))
 
 def NAND(a,b):
     result = list(map(__NAND,a,b))
@@ -37,9 +44,7 @@ def NAND(a,b):
 
 
 def __NOR(a,b):
-    if __OR(a,b) == "1":
-        return "0"
-    return "1"
+    return __NOT(__OR(a,b))
 
 def NOR(a,b):
     result = list(map(__NOR,a,b))
@@ -85,6 +90,6 @@ if __name__ == "__main__":
     a = "01101001 01101100 01110101 01110110 01111001 01100001"
     b = "01111000 01101111 01111000 01101111 01111000 01101111"
     t1 = time()
-    XOR(a,b)
+    print(XOR(a,b))
     t2 = time()
     print(t2-t1,"seconds")
