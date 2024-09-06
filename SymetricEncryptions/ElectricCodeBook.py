@@ -1,6 +1,5 @@
-from TextLib import NormalizeText,PaddingText,TextToBinary,BinaryToText
+from TextLib import PaddingText,TextToBinary,BinaryToText
 from BinaryOperations import XOR
-from MatrixLib import Ceil
 
 class ElectricCodeBook: #ECB
     def __init__(self):
