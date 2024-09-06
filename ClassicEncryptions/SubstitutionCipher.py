@@ -9,17 +9,17 @@ class SubstitutionCipher:
     def __init__(self):
         pass
 
-    def Encrypt(self,normalized_plain_text,substitution_key):
+    def Encrypt(self,normalized_plain_text,key):
         """
 
         normalized_plain_text: string (must be normalized)
-        substitution_key: dictionary
+        key: dictionary
 
         """
         
         normalized_plain_text = normalized_plain_text.lower()
 
-        cipher_text = map(lambda letter: substitution_key[letter],normalized_plain_text)
+        cipher_text = map(lambda letter: key[letter],normalized_plain_text)
 
         
 
@@ -27,15 +27,15 @@ class SubstitutionCipher:
     
 
 
-    def Decrypt(self,cipher_text,substitution_key):
+    def Decrypt(self,cipher_text,key):
         """
         cipher_text: string
-        substitution_key: dictionary
+        key: dictionary
         """
 
         
 
-        inverted_key = {value:key for key,value in substitution_key.items()}
+        inverted_key = {value:key for key,value in key.items()}
 
         plain_text = map(lambda letter: inverted_key[letter],cipher_text)
 
