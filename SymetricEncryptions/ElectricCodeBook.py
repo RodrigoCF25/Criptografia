@@ -15,16 +15,13 @@ class ElectricCodeBook (SymetricCipher):
         """
             returns binary text
         """
-
-        key_length = len(key)
    
         #Not needed because I don´t use padding, I use map method to iterate over the text and the key and map will stop when the shortest iterable is exhausted
         #plain_text = self.FitTextToKey(plain_text,key)
 
-        character_per_block = key_length // 8
+        size_of_block = len(key) // 8
 
-        plain_text_blocks = [plain_text[i:i+character_per_block] for i in range(0,len(plain_text),character_per_block)]
-
+        plain_text_blocks = self.GetBlocks(plain_text,size_of_block)
         
         cipher_text_blocks = []
 
@@ -47,21 +44,12 @@ class ElectricCodeBook (SymetricCipher):
         """
         cipher_text: string (binary)
         """
-        
-        cipher_text_length = len(cipher_text)
+
         key_length = len(key)
-        """
-        cipher_text_length = len(cipher_text)
-        residual = cipher_text_length % key_length
 
-        if residual != 0:
-            ideal_length = (cipher_text_length + key_length - residual)//8
-            cipher_text = PaddingText(cipher_text,ideal_length)
-        """
+        cipher_text_blocks = self.GetBlocks(cipher_text,size_of_block=key_length)
 
-        cipher_text_blocks = [cipher_text[i:i+key_length] for i in range(0,cipher_text_length,key_length)]
-
-
+        
         plain_text_blocks = []
         
         for block in cipher_text_blocks:

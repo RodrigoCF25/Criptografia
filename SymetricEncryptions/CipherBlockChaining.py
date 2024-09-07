@@ -21,11 +21,13 @@ class CipherBlockChaining(SymetricCipher):
         """
         returns binary text
         """
-        key_length = len(key)
+        
         #plain_text = self.FitTextToKey(plain_text,key) Don´t need to use padding because I use map method to iterate over the text and the key and map will stop when the shortest iterable is exhausted
-        character_per_block = key_length // 8
+        
+        size_of_block = len(key) // 8
 
-        plain_text_blocks = [plain_text[i:i+character_per_block] for i in range(0,len(plain_text),character_per_block)]
+        plain_text_blocks = self.GetBlocks(plain_text,size_of_block)
+
 
         cipher_text_blocks = []
 
@@ -47,14 +49,12 @@ class CipherBlockChaining(SymetricCipher):
     def Decrypt(self, cipher_text,key,initialization_vector):
         """
         cipher_text: string (binary)
+        returns plain text
         """
 
-
-        cipher_text_length = len(cipher_text)
         key_length = len(key)
+        cipher_text_blocks = self.GetBlocks(cipher_text,key_length)
 
-        
-        cipher_text_blocks = [cipher_text[i:i+key_length] for i in range(0,cipher_text_length,key_length)]
 
         plain_text_blocks = []
         previous_cipher_block = initialization_vector
