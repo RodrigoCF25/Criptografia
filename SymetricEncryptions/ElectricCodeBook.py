@@ -17,11 +17,11 @@ class ElectricCodeBook: #ECB
         
         key_length = len(key)
         """
-        plain_text_length = len(plain_text)
+        plain_text_length = len(plain_text) * 8
         residual = plain_text_length % key_length
 
         if residual != 0:
-            ideal_length = plain_text_length + key_length - residual
+            ideal_length = (plain_text_length + key_length - residual)//8
             plain_text = PaddingText(plain_text,ideal_length)
         """
 
@@ -56,7 +56,7 @@ class ElectricCodeBook: #ECB
         residual = cipher_text_length % key_length
 
         if residual != 0:
-            ideal_length = cipher_text_length + key_length - residual
+            ideal_length = (cipher_text_length + key_length - residual)//8
             cipher_text = PaddingText(cipher_text,ideal_length)
         """
 
