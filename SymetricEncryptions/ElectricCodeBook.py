@@ -13,19 +13,19 @@ class ElectricCodeBook: #ECB
 
     def Encrypt(self,plain_text,key):
 
-        block_size = len(key)
+        #I don´t need to padd the text, because I use map method to iterate over the text and the key and map will stop when the shortest iterable is exhausted
         
-        number_of_bits = len(plain_text) * 8
-        number_of_blocks = number_of_bits // block_size
+        key_length = len(key)
+        """
+        plain_text_length = len(plain_text)
+        residual = plain_text_length % key_length
 
-        if number_of_blocks == 0 or number_of_bits % block_size != 0:
-            number_of_blocks += 1
-        
-        #The total number of bits must be a multiple of the block size
-        number_of_bits = number_of_blocks * block_size
-        normalized_plain_text = PaddingText(plain_text,number_of_bits // 8)
+        if residual != 0:
+            ideal_length = plain_text_length + key_length - residual
+            plain_text = PaddingText(plain_text,ideal_length)
+        """
 
-        character_per_block = block_size // 8
+        character_per_block = key_length // 8
 
         plain_text_blocks = [plain_text[i:i+character_per_block] for i in range(0,len(plain_text),character_per_block)]
 
@@ -36,7 +36,8 @@ class ElectricCodeBook: #ECB
             cipher_block = self.__EncryptBlock(block,key)
             cipher_text_blocks.append(cipher_block)
         
-        cipher_text = "".join(cipher_text_blocks)
+        cipher_text = "".join(cipher_text_blocks)#[:plain_text_length] #The slicing is to remove the padding. But I don´t need to do it because I don´t use padding because I use map method to iterate over the text and the key and map will stop when the shortest iterable is exhausted
+        
 
         return cipher_text
     
@@ -49,17 +50,17 @@ class ElectricCodeBook: #ECB
 
     def Decrypt(self,cipher_text,key):
         
-        block_size = len(key)
-        number_of_bits = len(cipher_text) * 8
-        number_of_blocks = number_of_bits // block_size
+        key_length = len(key)
+        """
+        cipher_text_length = len(cipher_text)
+        residual = cipher_text_length % key_length
 
-        if number_of_blocks == 0 or number_of_bits % block_size != 0:
-            number_of_blocks += 1
+        if residual != 0:
+            ideal_length = cipher_text_length + key_length - residual
+            cipher_text = PaddingText(cipher_text,ideal_length)
+        """
 
-        #The total number of bits must be a multiple of the block size
-        number_of_bits = number_of_blocks * block_size
-
-        character_per_block = block_size // 8
+        character_per_block = key_length // 8
 
         cipher_text_blocks = [cipher_text[i:i+character_per_block] for i in range(0,len(cipher_text),character_per_block)]
 
