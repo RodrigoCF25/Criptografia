@@ -1,9 +1,9 @@
 from TextLib import PaddingText,TextToBinary,BinaryToText
 
 from BinaryOperations import XOR
+from SymetricCiphers import SymetricCipher
 
-
-class CipherBlockChaining:
+class CipherBlockChaining(SymetricCipher):
 
     def __init__(self):
         """This Cipher cant be executed concurrently, because it needs the previous cipher block to encrypt the next block"""
@@ -14,7 +14,8 @@ class CipherBlockChaining:
         cipher_block = XOR(xored_block,key)
         return cipher_block
 
-    def Encrypt():
+    def Encrypt(self,plain_text,key,initialization_vector):
+
         pass
 
 

@@ -1,7 +1,8 @@
 from TextLib import PaddingText,TextToBinary,BinaryToText
 from BinaryOperations import XOR
+from .SymetricCipher import SymetricCipher
 
-class ElectricCodeBook: #ECB
+class ElectricCodeBook (SymetricCipher):
     def __init__(self):
         pass
 
@@ -13,17 +14,10 @@ class ElectricCodeBook: #ECB
 
     def Encrypt(self,plain_text,key):
 
-        #I don´t need to padd the text, because I use map method to iterate over the text and the key and map will stop when the shortest iterable is exhausted
-        
         key_length = len(key)
-        """
-        plain_text_length = len(plain_text) * 8
-        residual = plain_text_length % key_length
-
-        if residual != 0:
-            ideal_length = (plain_text_length + key_length - residual)//8
-            plain_text = PaddingText(plain_text,ideal_length)
-        """
+   
+        #Not needed because I don´t use padding, I use map method to iterate over the text and the key and map will stop when the shortest iterable is exhausted
+        #plain_text = self.FitTextToKey(plain_text,key)
 
         character_per_block = key_length // 8
 
