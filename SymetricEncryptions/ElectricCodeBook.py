@@ -9,10 +9,12 @@ class ElectricCodeBook (SymetricCipher):
     def __EncryptBlock(self,block,key):
         block = TextToBinary(block)
         cipher_block = XOR(block,key)
-        cipher_block = BinaryToText(cipher_block)
         return cipher_block
 
     def Encrypt(self,plain_text,key):
+        """
+            returns binary text
+        """
 
         key_length = len(key)
    
@@ -37,13 +39,16 @@ class ElectricCodeBook (SymetricCipher):
     
 
     def __DecryptBlock(self,cipher_block,key):
-        block = TextToBinary(cipher_block)
-        plain_block = XOR(block,key)
+        plain_block = XOR(cipher_block,key)
         plain_block = BinaryToText(plain_block)
         return plain_block
 
     def Decrypt(self,cipher_text,key):
+        """
+        cipher_text: string (binary)
+        """
         
+        cipher_text_length = len(cipher_text)
         key_length = len(key)
         """
         cipher_text_length = len(cipher_text)
@@ -54,9 +59,8 @@ class ElectricCodeBook (SymetricCipher):
             cipher_text = PaddingText(cipher_text,ideal_length)
         """
 
-        character_per_block = key_length // 8
+        cipher_text_blocks = [cipher_text[i:i+key_length] for i in range(0,cipher_text_length,key_length)]
 
-        cipher_text_blocks = [cipher_text[i:i+character_per_block] for i in range(0,len(cipher_text),character_per_block)]
 
         plain_text_blocks = []
         

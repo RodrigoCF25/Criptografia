@@ -1,5 +1,7 @@
-from .ElectricCodeBook import ElectricCodeBook
 from .SymetricCipher import SymetricCipher
+from .ElectricCodeBook import ElectricCodeBook
+from .CipherBlockChaining import CipherBlockChaining
 
-__all__ = ['ElectricCodeBook','SymetricCipher']
+
+__all__ = ['SymetricCipher','ElectricCodeBook','CipherBlockChaining']
 

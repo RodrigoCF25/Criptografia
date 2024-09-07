@@ -2,7 +2,7 @@ from TextLib import PaddingText
 
 class SymetricCipher:
     def __init__(self):
-        pass
+        self.cache = {}
 
     def encrypt(self,plain_text,key):
         pass

@@ -62,6 +62,17 @@ def XOR(a,b):
     return "".join(result)
 
 
+def __LeftPadding(binary_number,length = 8):
+    return "0"*(length-len(binary_number)) + binary_number
+
+def __RightPadding(binary_number,length = 8):
+    return binary_number + "0"*(length-len(binary_number))
+
+
+def PaddingBinaryNumber(binary_number,length = 8, left = True):
+    if left:
+        return __LeftPadding(binary_number,length)
+    return __RightPadding(binary_number,length)
 
 
     
