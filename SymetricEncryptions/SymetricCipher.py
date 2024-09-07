@@ -23,3 +23,9 @@ class SymetricCipher:
 
         return text
     
+
+    def GetBlocks(self,text,size_of_block):
+        text_length = len(text)
+        blocks = [text[i:i+size_of_block] for i in range(0,text_length,size_of_block)]
+        return blocks
+    
