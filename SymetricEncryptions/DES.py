@@ -1,9 +1,11 @@
 from .SymetricCipher import SymetricCipher
 from TextLib import TextToBinary
+from BinaryOperations import XOR, IntToBinary, PaddingBinaryNumber
 
 
 class DES(SymetricCipher):
     def __init__(self):
+        super().__init__()
         self.__initial_permutation = [58, 50, 42, 34, 26, 18, 10, 2,
                                     60, 52, 44, 36, 28, 20, 12, 4,
                                     62, 54, 46, 38, 30, 22, 14, 6,
@@ -22,7 +24,7 @@ class DES(SymetricCipher):
                                             34, 2, 42, 10, 50, 18, 58, 26,
                                             33, 1, 41, 9, 49, 17, 57, 25]
         
-        self.__expansion = [32, 1, 2, 3, 4, 5,
+        self.__expansion_permutation = [32, 1, 2, 3, 4, 5,
                         4, 5, 6, 7, 8, 9,
                         8, 9, 10, 11, 12, 13,
                         12, 13, 14, 15, 16, 17,
@@ -44,7 +46,60 @@ class DES(SymetricCipher):
                                     63, 55, 47, 39, 31, 23, 15,
                                     7, 62, 54, 46, 38, 30, 22,
                                     14, 6, 61, 53, 45, 37, 29,
-                                    21, 13, 5, 28, 20, 12, 4]
+                                    21, 13, 5, 28, 20, 12, 4] #PC-1
+        
+        self.__permutation_choice2 = [14, 17, 11, 24, 1, 5, 3, 28,
+                                    15, 6, 21, 10, 23, 19, 12, 4,
+                                    26, 8, 16, 7, 27, 20, 13, 2,
+                                    41, 52, 31, 37, 47, 55, 30, 40,
+                                    51, 45, 33, 48, 44, 49, 39, 56,
+                                    34, 53, 46, 42, 50, 36, 29, 32] #PC-2
+        
+
+        self.__scheduled_of_left_shifts = [1, 1, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 1]
+
+        self.__S_boxes = [
+            [[14, 4, 13, 1, 2, 15, 11, 8, 3, 10, 6, 12, 5, 9, 0, 7],
+            [0, 15, 7, 4, 14, 2, 13, 1, 10, 6, 12, 11, 9, 5, 3, 8],
+            [4, 1, 14, 8, 13, 6, 2, 11, 15, 12, 9, 7, 3, 10, 5, 0],
+            [15, 12, 8, 2, 4, 9, 1, 7, 5, 11, 3, 14, 10, 0, 6, 13]],
+
+            [[15, 1, 8, 14, 6, 11, 3, 4, 9, 7, 2, 13, 12, 0, 5, 10],
+            [3, 13, 4, 7, 15, 2, 8, 14, 12, 0, 1, 10, 6, 9, 11, 5],
+            [0, 14, 7, 11, 10, 4, 13, 1, 5, 8, 12, 6, 9, 3, 2, 15],
+            [13, 8, 10, 1, 3, 15, 4, 2, 11, 6, 7, 12, 0, 5, 14, 9]],
+
+            [[10, 0, 9, 14, 6, 3, 15, 5, 1, 13, 12, 7, 11, 4, 2, 8],
+            [13, 7, 0, 9, 3, 4, 6, 10, 2, 8, 5, 14, 12, 11, 15, 1],
+            [13, 6, 4, 9, 8, 15, 3, 0, 11, 1, 2, 12, 5, 10, 14, 7],
+            [1, 10, 13, 0, 6, 9, 8, 7, 4, 15, 14, 3, 11, 5, 2, 12]],
+
+            [[7, 13, 14, 3, 0, 6, 9, 10, 1, 2, 8, 5, 11, 12, 4, 15],
+            [13, 8, 11, 5, 6, 15, 0, 3, 4, 7, 2, 12, 1, 10, 14, 9],
+            [10, 6, 9, 0, 12, 11, 7, 13, 15, 1, 3, 14, 5, 2, 8, 4],
+            [3, 15, 0, 6, 10, 1, 13, 8, 9, 4, 5, 11, 12, 7, 2, 14]],
+
+            [[2, 12, 4, 1, 7, 10, 11, 6, 8, 5, 3, 15, 13, 0, 14, 9],
+            [14, 11, 2, 12, 4, 7, 13, 1, 5, 0, 15, 10, 3, 9, 8, 6],
+            [4, 2, 1, 11, 10, 13, 7, 8, 15, 9, 12, 5, 6, 3, 0, 14],
+            [11, 8, 12, 7, 1, 14, 2, 13, 6, 15, 0, 9, 10, 4, 5, 3]],
+
+            [[12, 1, 10, 15, 9, 2, 6, 8, 0, 13, 3, 4, 14, 7, 5, 11],
+            [10, 15, 4, 2, 7, 12, 9, 5, 6, 1, 13, 14, 0, 11, 3, 8],
+            [9, 14, 15, 5, 2, 8, 12, 3, 7, 0, 4, 10, 1, 13, 11, 6],
+            [4, 3, 2, 12, 9, 5, 15, 10, 11, 14, 1, 7, 6, 0, 8, 13]],
+
+            [[4, 11, 2, 14, 15, 0, 8, 13, 3, 12, 9, 7, 5, 10, 6, 1],
+            [13, 0, 11, 7, 4, 9, 1, 10, 14, 3, 5, 12, 2, 15, 8, 6],
+            [1, 4, 11, 13, 12, 3, 7, 14, 10, 15, 6, 8, 0, 5, 9, 2],
+            [6, 11, 13, 8, 1, 4, 10, 7, 9, 5, 0, 15, 14, 2, 3, 12]],
+
+            [[13, 2, 8, 4, 6, 15, 11, 1, 10, 9, 3, 14, 5, 0, 12, 7],
+            [1, 15, 13, 8, 10, 3, 7, 4, 12, 5, 6, 11, 0, 14, 9, 2],
+            [7, 11, 4, 1, 9, 12, 14, 2, 0, 6, 10, 13, 15, 3, 5, 8],
+            [2, 1, 14, 7, 4, 10, 8, 13, 15, 12, 9, 0, 3, 5, 6, 11]]
+        ]
+
         
 
     def __Permute(self,text,permutation):
@@ -59,37 +114,114 @@ class DES(SymetricCipher):
     
 
     def __DoExpansionPermutation(self,text):
-        return self.__Permute(text,self.__expansion)
+        return self.__Permute(text,self.__expansion_permutation)
     
 
+    def __DoPermutationChoice2(self,key):
+        return self.__Permute(key,self.__permutation_choice2)
+    
+    
+    def __GetSBox(self): #Generator function
+        index = 0
+        while index < 8:
+            yield self.__S_boxes[index]
+            index += 1
+
+
+
+    def __F(self,right_block,Ki):
+        """
+            right_block: string (binary) 32 bits Ri-1
+            key: string (binary) 48 bits Ki
+        """
+        right_block = self.__DoExpansionPermutation(right_block) #48 bits
+        r_xor_ki = XOR(right_block,Ki)
+
+        #S-Boxes
+        substitution_blocks = []
+        for n,S_box in enumerate(self.__GetSBox(),start=0):
+            block = r_xor_ki[n*6:(n+1)*6]
+            row = int(block[0] + block[5],2)
+            column = int(block[1:5],2)
+            value = S_box[row][column]
+            binary_value = PaddingBinaryNumber(IntToBinary(value),4)
+            substitution_blocks.append(binary_value)
+        
+        substitution_blocks = "".join(substitution_blocks)
+
+        permutation = self.__Permute(substitution_blocks,self.__permutation_function)
+
+        return permutation
+   
+
+
     def __EncryptBlock(self,block,key):
+
         block = TextToBinary(block)
         block = self.__DoInitialPermutation(block)
 
-        left_block = block[:32] #Li-1
-        right_block = block[32:] #Ri-1
+        for i in range(16): #16 rounds
 
-        right_block = self.__DoExpansionPermutation(right_block) #Now right_block has 48 bits
+            #LEFT SIDE (TEXT)
+            left_block = block[:32] #Li-1
+            right_block = block[32:] #Ri-1
+            
+            #RIGHT SIDE (KEY)
+            left_key = key[:28] #Ci-1
+            right_key = key[28:] #Di-1
+            left_shift = self.__scheduled_of_left_shifts[i]
+            left_key = left_key[left_shift:] + "0" * left_shift #Ci
+            right_key = right_key[left_shift:] + "0" * left_shift #Di
 
-        left_key = key[:28] #Ci-1
-        right_key = key[28:] #Di-1
+            key = left_key + right_key #CiDi
+
+            Ki = self.__DoPermutationChoice2(key) #Ki
+
+            f = self.__F(right_block,Ki)
+
+            new_right_block = XOR(left_block,f)
+            left_block = right_block
+            right_block = new_right_block
+
+            block = left_block + right_block
+
+        swap = right_block + left_block # L16R16 -> R16L16
+        cipher_block = self.__Permute(swap,self.__inverse_initial_permutation)
+
+        cipher_block = self.BinaryToHexRepresentation(cipher_block)
+
+        return cipher_block
+
+        
+
+
+
+
 
 
 
 
 
     def Encrypt(self,plain_text,key):
-        
+
+        key = key.lower()
+        key = self.HexToBinaryRepresentation(key)
+
         plain_text = self.FitTextToKey(plain_text,key) 
         size_of_block = len(key) // 8
         plain_text_blocks = self.GetBlocks(plain_text,size_of_block)
 
-        key = self.__DoPermutationChoice1(key) #56 bits
+        key = self.__DoPermutationChoice1(key) #56 bits key
 
-
+        cipher_text_blocks = []
         for block in plain_text_blocks:
-            self.__EncryptBlock(block,key)
-            break
+            cipher_text_blocks.append(self.__EncryptBlock(block,key))
+
+        cipher_text = "".join(cipher_text_blocks)
+
+
+        return cipher_text
+            
             
 
 
@@ -98,6 +230,9 @@ class DES(SymetricCipher):
 
 
     def Decrypt(self,cipher_text,key):
+        key = key.lower()
+        key = self.HexToBinaryRepresentation(key)
+
         pass
 
    
