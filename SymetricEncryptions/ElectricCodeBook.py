@@ -61,7 +61,7 @@ class ElectricCodeBook (SymetricCipher):
         key = self.HexToBinaryRepresentation(key)
         key_length = len(key)
 
-        size_of_block = key_length // 4 #Each letter is represented by 8 bits, so 16 bits (2 hexadecimal digits) makes a letter
+        size_of_block = key_length // 4 #Each letter is represented by 4 bits, so 8 bits (2 hexadecimal digits) makes a character
 
         cipher_text_blocks = self.GetBlocks(cipher_text,size_of_block=size_of_block)
         
