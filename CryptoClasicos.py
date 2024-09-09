@@ -191,15 +191,4 @@ if __name__ == "__main__":
 
 
 
-    print("Tarea Hill Cipher")
-
-    text = "Pay more money"
-    key = [[17,17,5],[21,18,21],[2,2,19]]
-    cipher_text = encoder.HillCipher(text,key)
-    print(f"Original text: {text}")
-    print(f"Cipher text: {cipher_text}")
-    plain_text,inverse_key = decryptor.HillCipher(cipher_text,key,True)
-    print(f"Decrypted text: {plain_text}")
-    print(f"Inverse Key: {inverse_key}")
-    print("---------"*10)
 

@@ -11,7 +11,7 @@ if __name__ == "__main__":
 
     text = NormalizeText(text)
 
-    key = "AA" * 8
+    key = "AF" * 8
 
     encoder = ElectricCodeBook()
 
@@ -36,7 +36,7 @@ if __name__ == "__main__":
     print("Encrypting and decrypting using the Cipher Block Chaining")
 
     initialization_vector = "00" * 8
-    key = "AA" * 8
+    key = "AF" * 8
 
     encoder = CipherBlockChaining()
 
@@ -57,11 +57,11 @@ if __name__ == "__main__":
     print("---------"*10)
 
 
-    print("Encrypting and decrypting using the DES")
+    print("Encrypting and decrypting using the DES Encryption")
 
     encoder = DES()
-    key = "AA" * 8
-    
+    key = "AF" * 8
+
     t1 = time()
     cipher_text = encoder.Encrypt(text,key)
     t2 = time()
@@ -73,4 +73,12 @@ if __name__ == "__main__":
     t1 = time()
     deciphered_text = encoder.Decrypt(cipher_text,key)
     t2 = time()
+
+    print(f"Deciphered text: {deciphered_text}")
+
+    print(f"Time to decrypt: {t2-t1} seconds")
+
+    print("---------"*10)
+
+
 
