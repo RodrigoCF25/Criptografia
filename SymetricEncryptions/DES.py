@@ -1,11 +1,12 @@
 from .SymetricCipher import SymetricCipher
-from TextLib import TextToBinary
+from TextLib import TextToBinary, BinaryToText
 from BinaryOperations import XOR, IntToBinary, PaddingBinaryNumber
 
 
 class DES(SymetricCipher):
     def __init__(self):
         super().__init__()
+        self.__key_and_sub_keys = dict()
         self.__initial_permutation = [58, 50, 42, 34, 26, 18, 10, 2,
                                     60, 52, 44, 36, 28, 20, 12, 4,
                                     62, 54, 46, 38, 30, 22, 14, 6,
@@ -120,6 +121,9 @@ class DES(SymetricCipher):
     def __DoPermutationChoice2(self,key):
         return self.__Permute(key,self.__permutation_choice2)
     
+    def __DoFinalPermutation(self,text):
+        return self.__Permute(text,self.__inverse_initial_permutation)
+    
     
     def __GetSBox(self): #Generator function
         index = 0
@@ -154,56 +158,53 @@ class DES(SymetricCipher):
         return permutation
    
 
+    def __GenerateSubKeys(self,key):
+        key = self.__DoPermutationChoice1(key) #56 bits key
 
-    def __EncryptBlock(self,block,key):
+        left_key = key[:28] #C0
+        right_key = key[28:] #D0
 
+        sub_keys = []
+        for i in range(16):
+            left_shift = self.__scheduled_of_left_shifts[i]
+            left_key = left_key[left_shift:] + left_key[:left_shift]
+            right_key = right_key[left_shift:] + right_key[:left_shift]
+            sub_key = self.__DoPermutationChoice2(left_key + right_key)
+            sub_keys.append(sub_key)
+
+        return sub_keys
+
+
+
+    def __EncryptBlock(self,block,sub_keys):
         block = TextToBinary(block)
         block = self.__DoInitialPermutation(block)
 
-        for i in range(16): #16 rounds
-
+        for Ki in sub_keys:    
             #LEFT SIDE (TEXT)
-            left_block = block[:32] #Li-1
-            right_block = block[32:] #Ri-1
-            
-            #RIGHT SIDE (KEY)
-            left_key = key[:28] #Ci-1
-            right_key = key[28:] #Di-1
-            left_shift = self.__scheduled_of_left_shifts[i]
-            left_key = left_key[left_shift:] + "0" * left_shift #Ci
-            right_key = right_key[left_shift:] + "0" * left_shift #Di
+            left_block = block[:32]
+            right_block = block[32:]
 
-            key = left_key + right_key #CiDi
+            f = self.__F(right_block,Ki) # Expansion permutation, XOR, S-Boxes and Permutation function
 
-            Ki = self.__DoPermutationChoice2(key) #Ki
+            new_right_block = XOR(left_block,f) #Ri = Li-1 XOR F(Ri-1,Ki)
 
-            f = self.__F(right_block,Ki)
+            left_block = right_block #Li = Ri-1
 
-            new_right_block = XOR(left_block,f)
-            left_block = right_block
-            right_block = new_right_block
+            right_block = new_right_block #Ri = Li-1 XOR F(Ri-1,Ki)
 
             block = left_block + right_block
 
-        swap = right_block + left_block # L16R16 -> R16L16
-        cipher_block = self.__Permute(swap,self.__inverse_initial_permutation)
+        swap = right_block + left_block
+
+        cipher_block = self.__DoFinalPermutation(swap)
 
         cipher_block = self.BinaryToHexRepresentation(cipher_block)
 
         return cipher_block
 
-        
-
-
-
-
-
-
-
-
-
+            
     def Encrypt(self,plain_text,key):
-
         key = key.lower()
         key = self.HexToBinaryRepresentation(key)
 
@@ -211,30 +212,91 @@ class DES(SymetricCipher):
         size_of_block = len(key) // 8
         plain_text_blocks = self.GetBlocks(plain_text,size_of_block)
 
-        key = self.__DoPermutationChoice1(key) #56 bits key
+        sub_keys = self.__key_and_sub_keys.get(key)
+
+        if sub_keys is None:
+            sub_keys = self.__GenerateSubKeys(key)
+            self.__key_and_sub_keys[key] = sub_keys
+
 
         cipher_text_blocks = []
         for block in plain_text_blocks:
-            cipher_text_blocks.append(self.__EncryptBlock(block,key))
+            cipher_text_blocks.append(self.__EncryptBlock(block,sub_keys))
 
         cipher_text = "".join(cipher_text_blocks)
 
 
         return cipher_text
-            
-            
 
 
+    def __DecryptBlock(self,cipher_block,sub_keys):
+        cipher_block = self.HexToBinaryRepresentation(cipher_block)
+        cipher_block = self.__DoInitialPermutation(cipher_block)
+
+        left_block = cipher_block[:32]
+        right_block = cipher_block[32:]
+        
+
+        for Ki in reversed(sub_keys):
+            
+
+            f = self.__F(right_block,Ki) # Expansion permutation, XOR, S-Boxes and Permutation function
+
+            new_right_block = XOR(left_block,f)
+
+            left_block = right_block #Li = Ri-1
+
+            right_block = new_right_block #Ri = Li-1 XOR F(Ri-1,Ki)
+
+            cipher_block = left_block + right_block
+
+        swap = right_block + left_block
+
+        plain_block = self.__DoFinalPermutation(swap)
+
+        plain_block = BinaryToText(plain_block)
+
+        return plain_block
 
 
 
 
     def Decrypt(self,cipher_text,key):
+        """
+        params:
+            cipher_text: string (hexadecimal 4 bits, 8 bits makes a plain text letter)
+            key: string (hexadecimal)
+        returns:
+            plain text: string (text)
+
+        """
         key = key.lower()
         key = self.HexToBinaryRepresentation(key)
 
-        pass
+        key_length = len(key)
+
+        size_of_block = key_length // 4 #Each letter is represented by 4 bits, so 18 bits (2 hexadecimal digits) makes a character
+
+        cipher_text_blocks = self.GetBlocks(cipher_text,size_of_block)
+
+        sub_keys = self.__key_and_sub_keys.get(key)
+
+        if sub_keys is None:
+            sub_keys = self.__GenerateSubKeys(key)
+            self.__key_and_sub_keys[key] = sub_keys
+
+
+
+        plain_text_blocks = []
+
+        for block in cipher_text_blocks:
+            plain_text_blocks.append(self.__DecryptBlock(block,sub_keys))
+
+        plain_text = "".join(plain_text_blocks)
+
+        return plain_text
+
+
 
    
-    def __DecryptBlock(self,cipher_block,key):
-        pass
+    
