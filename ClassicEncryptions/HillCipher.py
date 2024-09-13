@@ -41,7 +41,7 @@ class HillCipher:
     
     def __CipherP(self,p,key):
         """
-        p: list of integers
+        p: list of lists of integers
         key: list of lists integers [[1,2],[3,4]]
         """
         
@@ -67,6 +67,10 @@ class HillCipher:
         
         normalized_plain_text = NormalizeText(normalized_plain_text)
 
+        try:
+            inverse_key = self.__GetInverseKey(key)
+        except ValueError as e:
+            return str(e) + ", so even encrypting is possible, decrypting is not"
 
         p =  self.__TextToNumberArrays(normalized_plain_text,key) #We have the message as a list of lists of integers
         
@@ -117,8 +121,10 @@ class HillCipher:
 
         determinant = determinant % ALPHABET_LENGTH
 
-
         determinant_modular26_inverse = self.__GetModularInverse(determinant)
+
+        if determinant_modular26_inverse is None:
+            raise ValueError("The determinant is not invertible")
 
 
         inverse_key = list(map(lambda row: list(map(lambda number: number * determinant_modular26_inverse % ALPHABET_LENGTH,row)),adjoint))
@@ -145,12 +151,17 @@ class HillCipher:
         cipher_text: string
         key: list of lists integers [[1,2],[3,4]]
         """
+
+        try:
+            inverse_key = self.__GetInverseKey(key)
+
+        except ValueError as e:
+            return str(e) + ", so decrypting is not possible"
         
         c = NormalizeText(cipher_text)
 
         c = self.__TextToNumberArrays(c,key) #We have the cipher_text as a list of lists of integers
 
-        inverse_key = self.__GetInverseKey(key)
 
         p = self.__DecipherC(c,inverse_key) #We have the decrypted message as a list of matrix
         
