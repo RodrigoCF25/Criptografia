@@ -1,7 +1,4 @@
-from TextLib import ALPHABET, ALPHABET_LENGTH, NormalizeText, NormalizeKey, GetUniqueValues
-from functools import reduce
-from time import time
-from random import choice
+from TextLib import ALPHABET, ALPHABET_LENGTH, NormalizeText
 
 
 class SubstitutionCipher:
@@ -17,7 +14,7 @@ class SubstitutionCipher:
 
         """
         
-        normalized_plain_text = normalized_plain_text.lower()
+        normalized_plain_text = NormalizeText(normalized_plain_text)
 
         cipher_text = map(lambda letter: key[letter],normalized_plain_text)
 
