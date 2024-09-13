@@ -1,5 +1,6 @@
 from TextLib import PaddingText
 from functools import reduce
+from BinaryOperations import HexToBinary,BinaryToHex
 
 class SymetricCipher:
     def __init__(self):
@@ -32,21 +33,21 @@ class SymetricCipher:
         return blocks
     
     
-    def BinaryToHex(self,number):
-        hex_number = self.cache.get(number)
+    def BinaryToHex(self,binary_number):
+        hex_number = self.cache.get(binary_number)
 
         if hex_number is None:
-            bits_reversed = map(lambda bit: bit,number[::-1])
-            hex_number = reduce(lambda accumulator,bit: accumulator + 2**bit[0] if bit[1] == "1" else accumulator,enumerate(bits_reversed),0)
-            hex_number = self.hex_digits[hex_number]
-            self.cache[number] = hex_number
-            self.cache[hex_number] = number
+            hex_number = BinaryToHex(binary_number)
+            
+            self.cache[binary_number] = hex_number
+            self.cache[hex_number] = binary_number
+
 
         return hex_number
     
 
     def BinaryToHexRepresentation(self,binary_stream):
-        hex_stream = [self.BinaryToHex(binary_stream[i:i+4]) for i in range(0,len(binary_stream),4)]
+        hex_stream = (self.BinaryToHex(binary_stream[i:i+4]) for i in range(0,len(binary_stream),4))
         return "".join(hex_stream)
 
 
@@ -54,11 +55,10 @@ class SymetricCipher:
         binary_number = self.cache.get(hex_number)
 
         if binary_number is None:
-            number = self.hex_digits.index(hex_number)
-            binary_number = bin(number)[2:]
-            binary_number = "0"*(4-len(binary_number)) + binary_number
+            binary_number = HexToBinary(hex_number)
             self.cache[hex_number] = binary_number
             self.cache[binary_number] = hex_number
+
 
         return binary_number
     

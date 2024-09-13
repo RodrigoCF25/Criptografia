@@ -160,7 +160,6 @@ class DES(SymetricCipher):
 
     def __GenerateSubKeys(self,key):
         key = self.__DoPermutationChoice1(key) #56 bits key
-
         left_key = key[:28] #C0
         right_key = key[28:] #D0
 
@@ -230,9 +229,9 @@ class DES(SymetricCipher):
 
 
     def __DecryptBlock(self,cipher_block,sub_keys):
+        cipher_block = cipher_block.lower()
         cipher_block = self.HexToBinaryRepresentation(cipher_block)
         cipher_block = self.__DoInitialPermutation(cipher_block)
-
         left_block = cipher_block[:32]
         right_block = cipher_block[32:]
         

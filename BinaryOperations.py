@@ -1,5 +1,8 @@
 from TextLib import ALPHABET,ALPHABET_LENGTH
 from time import time
+from functools import reduce
+
+HEX_DIGITS = "0123456789abcdef"
 
 #Get the binary representation of a number
 def IntToBinary(number):
@@ -66,7 +69,28 @@ def PaddingBinaryNumber(binary_number,length = 8):
     return "0"*(length-len(binary_number)) + binary_number
 
     
+def BinaryToHex(number):
+    bits_reversed = map(lambda bit: bit,number[::-1]) #The bits are reversed
+    decimal = reduce(lambda accumulator,bit: accumulator + 2**bit[0] if bit[1] == "1" else accumulator,enumerate(bits_reversed),0) #The number is calculated, bit consits of the index and the value of the bit
+    hex_number = HEX_DIGITS[decimal]
+    return hex_number
 
+
+def BinaryToHexRepresentation(binary_stream):
+    hex_stream = (BinaryToHex(binary_stream[i:i+4]) for i in range(0,len(binary_stream),4))
+    return "".join(hex_stream)
+
+
+def HexToBinary(hex_number):
+    decimal = HEX_DIGITS.index(hex_number)
+    binary_number = bin(decimal)[2:]
+    binary_number = PaddingBinaryNumber(binary_number,4)
+
+    return binary_number
+
+def HexToBinaryRepresentation(hex_stream):
+    binary_stream = (HexToBinary(hex_stream[i]) for i in range(0,len(hex_stream)))
+    return "".join(binary_stream)
 
 
 #Binary Operations
