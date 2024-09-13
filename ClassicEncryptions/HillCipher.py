@@ -141,7 +141,7 @@ class HillCipher:
         p = list(map(lambda row: MatrixMultiply([row],key_inverse)[0],c))
 
         for n,row in enumerate(p):
-            p[n] = list(map(lambda number: number % ALPHABET_LENGTH,row))
+            p[n] = map(lambda number: number % ALPHABET_LENGTH,row)
         
         return p
 
@@ -165,10 +165,10 @@ class HillCipher:
 
         p = self.__DecipherC(c,inverse_key) #We have the decrypted message as a list of matrix
         
-        text_plain = ["" for _ in range(len(p))]
+        text_plain = []
 
-        for n,row in enumerate(p):
-            text_plain[n] = "".join(map(lambda number: ALPHABET[number],row))
+        for row in p:
+            text_plain.append("".join(map(lambda number: ALPHABET[number],row)))
 
         text_plain = "".join(text_plain)
 
@@ -191,10 +191,10 @@ class HillCipher:
 
         p = self.__DecipherC(c,key_inverse)
 
-        text_plain = ["" for _ in range(len(p))]
+        text_plain = []
 
-        for n,row in enumerate(p):
-            text_plain[n] = "".join(map(lambda number: ALPHABET[number],row))
+        for row in p:
+            text_plain.append("".join(map(lambda number: ALPHABET[number],row)))
 
         return "".join(text_plain)
 

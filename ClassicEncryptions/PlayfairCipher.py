@@ -74,7 +74,7 @@ class PlayfairCipher:
             text += "x"
             text_length += 1
 
-        pairs = [text[i:i+2] for i in range(0,text_length,2)]
+        pairs = (text[i:i+2] for i in range(0,text_length,2))
         
         return pairs
     

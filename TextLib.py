@@ -68,7 +68,7 @@ def BinaryToLetter(binary):
     return letter
 
 def BinaryToText(binary_text):
-    text = list(map(BinaryToLetter,[binary_text[i:i+8] for i in range(0,len(binary_text),8)]))
+    text = map(BinaryToLetter,[binary_text[i:i+8] for i in range(0,len(binary_text),8)])
     return "".join(text)
 
 
