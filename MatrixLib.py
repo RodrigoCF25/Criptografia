@@ -205,21 +205,18 @@ def Determinant(m): #Is Gauss but not making ones in the diagonal, diagonal prod
     
     determinant *= matrix[-1][-1]
 
-    if int(determinant) == determinant:
-        return int(determinant)
+    determinant = round(determinant,2)
+
+    determinantFloor = Floor(determinant)
+
+    if abs(determinant - determinantFloor) < 0.01:
+        return determinantFloor
     
-    if determinant > 0:
-        if determinant - int(determinant) >= 0.5:
-            determinant = Ceil(determinant)
-        else:
-            determinant = Floor(determinant)
+    determinantCeil = Ceil(determinant)
 
-    else:
-        if abs(determinant) - abs(int(determinant)) >= 0.5:
-            determinant = Floor(determinant)
-        else:
-            determinant = Ceil(determinant)
-
+    if abs(determinant - determinantCeil) < 0.01:
+        return determinantCeil
+    
     return determinant
 
 
